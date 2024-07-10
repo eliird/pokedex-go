@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func startRepl() {
+func startRepl(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	availableCommands := getCommnads()
@@ -30,7 +30,11 @@ func startRepl() {
 			fmt.Println("Invalid command")
 			continue
 		}
-		command.callback()
+		err := command.callback(cfg)
+
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 
 }
@@ -38,7 +42,7 @@ func startRepl() {
 type cliCommnad struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*config) error
 }
 
 func getCommnads() map[string]cliCommnad {
@@ -59,6 +63,17 @@ func getCommnads() map[string]cliCommnad {
 			name:        "map",
 			description: "Get the location area that can be explored",
 			callback:    callbackMap,
+		},
+		"mapn": {
+			name:        "mapn",
+			description: "Moves to the next location of the map",
+			callback:    callbackMapN,
+		},
+
+		"mapb": {
+			name:        "mapn",
+			description: "Goes to the previous location of the map",
+			callback:    callbackMapB,
 		},
 	}
 }

@@ -1,16 +1,14 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
-
-	"github.com/eliird/pokedex-go/internal/pokeapi"
 )
 
-func callbackMap() error {
-	pokeApiClient := pokeapi.NewClient()
+func callbackMap(cfg *config) error {
 
-	resp, err := pokeApiClient.ListLocationAreas()
+	resp, err := cfg.pokeapiClient.ListLocationAreas(cfg.currentPageURL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -19,6 +17,53 @@ func callbackMap() error {
 	for _, area := range resp.Results {
 		fmt.Printf(" -%s\n", area.Name)
 	}
+
+	cfg.nextLocationAreaURL = resp.Next
+	cfg.previousLocationAreaURL = resp.Previous
+	cfg.currentPageURL = cfg.currentPageURL
+
+	return nil
+}
+
+func callbackMapN(cfg *config) error {
+	if cfg.nextLocationAreaURL == nil {
+		return errors.New("you are at the last page of the map")
+	}
+
+	resp, err := cfg.pokeapiClient.ListLocationAreas(cfg.nextLocationAreaURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Location areas:")
+	for _, area := range resp.Results {
+		fmt.Printf(" -%s\n", area.Name)
+	}
+
+	cfg.currentPageURL = cfg.nextLocationAreaURL
+	cfg.nextLocationAreaURL = resp.Next
+	cfg.previousLocationAreaURL = resp.Previous
+
+	return nil
+}
+
+func callbackMapB(cfg *config) error {
+	if cfg.previousLocationAreaURL == nil {
+		return errors.New("you are at the first page of the map")
+	}
+	resp, err := cfg.pokeapiClient.ListLocationAreas(cfg.previousLocationAreaURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Location areas:")
+	for _, area := range resp.Results {
+		fmt.Printf(" -%s\n", area.Name)
+	}
+
+	cfg.currentPageURL = cfg.previousLocationAreaURL
+	cfg.nextLocationAreaURL = resp.Next
+	cfg.previousLocationAreaURL = resp.Previous
 
 	return nil
 }
