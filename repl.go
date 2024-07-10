@@ -76,7 +76,7 @@ func getCommnads() map[string]cliCommnad {
 		},
 
 		"mapb": {
-			name:        "mapn",
+			name:        "mapb",
 			description: "Goes to the previous location of the map",
 			callback:    callbackMapB,
 		},
@@ -85,6 +85,21 @@ func getCommnads() map[string]cliCommnad {
 			name:        "explore {location_area}",
 			description: "Goes the pokemon in a location area",
 			callback:    callbackExplore,
+		},
+		"catch": {
+			name:        "catch {pokemon_name}",
+			description: "capture pokemon",
+			callback:    callbackCatch,
+		},
+		"inspect": {
+			name:        "inspect {pokemon_name}",
+			description: "display the stats of the pokemon",
+			callback:    callbackInspect,
+		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "display all the pokemons that have been captured",
+			callback:    callbackPokedex,
 		},
 	}
 }
