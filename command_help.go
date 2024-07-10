@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func callbackHelp() {
+func callbackHelp() error {
 	fmt.Println("Welcome to the pokedex help menu!")
 	fmt.Println("Here are your available commanads")
 	availableCommands := getCommnads()
@@ -13,4 +13,6 @@ func callbackHelp() {
 		fmt.Printf("- %s : %s\n", command.name, command.description)
 	}
 	fmt.Println("")
+
+	return nil
 }

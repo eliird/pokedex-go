@@ -13,7 +13,7 @@ func startRepl() {
 	availableCommands := getCommnads()
 
 	for {
-		fmt.Print("Please enter the name of the pokemon > ")
+		fmt.Print(" > ")
 		scanner.Scan()
 		text := scanner.Text()
 		cleaned := cleanInput(text)
@@ -38,7 +38,7 @@ func startRepl() {
 type cliCommnad struct {
 	name        string
 	description string
-	callback    func()
+	callback    func() error
 }
 
 func getCommnads() map[string]cliCommnad {
@@ -53,6 +53,12 @@ func getCommnads() map[string]cliCommnad {
 			name:        "exit",
 			description: "turns off pokedex",
 			callback:    callbackExit,
+		},
+
+		"map": {
+			name:        "map",
+			description: "Get the location area that can be explored",
+			callback:    callbackMap,
 		},
 	}
 }
